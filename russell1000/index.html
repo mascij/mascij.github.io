@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russell 1000 Stock Analysis Reports</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 60px 40px;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            font-size: 1.2em;
+            margin-bottom: 50px;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .report-card {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-left: 6px solid #667eea;
+        }
+
+        .report-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .report-card h2 {
+            color: #2d3748;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .report-card .icon {
+            font-size: 1.2em;
+        }
+
+        .report-card p {
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .report-card ul {
+            color: #4a5568;
+            line-height: 1.8;
+            margin: 15px 0 20px 20px;
+        }
+
+        .report-card li {
+            margin-bottom: 8px;
+        }
+
+        .report-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .report-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border-left: 6px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+
+        .info-box h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #856404;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            color: #718096;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+            font-size: 0.9em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .report-card h2 {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Russell 1000 Stock Analysis</h1>
+        <p class="subtitle">5-Year Performance Analysis (2020-2025) | 1,003 Stocks</p>
+
+        <div class="info-box">
+            <h3>📈 About This Analysis</h3>
+            <p>
+                This analysis examines 1,003 stocks from the Russell 1000 index over a 5-year period, comparing
+                individual stock and sector performance against the S&P 500 (SPY) and Russell 1000 (IWB) benchmarks.
+                All returns are calculated using adjusted closing prices to account for stock splits and dividends.
+            </p>
+        </div>
+
+        <div class="report-grid">
+            <!-- Report 1 -->
+            <div class="report-card">
+                <h2>
+                    <span class="icon">🏢</span>
+                    Sector Performance Report
+                    <span class="badge">OVERVIEW</span>
+                </h2>
+                <p>
+                    Comprehensive sector-level analysis showing average monthly returns by sector across different
+                    market capitalizations. Compare how each sector performed relative to the S&P 500 and Russell 1000 indexes.
+                </p>
+                <ul>
+                    <li><strong>Overall sector performance</strong> across all market caps</li>
+                    <li><strong>5 market cap breakdowns:</strong> Mega, Large, Mid, Small, Micro</li>
+                    <li><strong>Year-by-year returns</strong> (2020-2025) plus 5-year averages</li>
+                    <li><strong>Stock counts</strong> per sector/market cap combination</li>
+                    <li><strong>Index comparison</strong> showing outperformance/underperformance</li>
+                </ul>
+                <a href="sector_performance_report.html" class="report-link">View Sector Performance →</a>
+            </div>
+
+            <!-- Report 2 -->
+            <div class="report-card">
+                <h2>
+                    <span class="icon">📈</span>
+                    Stock-Level Index Beating Analysis
+                    <span class="badge">5-YEAR</span>
+                </h2>
+                <p>
+                    Individual stock performance analysis showing what percentage of stocks in each sector and market
+                    cap category actually beat the benchmark indexes over the full 5-year period.
+                </p>
+                <ul>
+                    <li><strong>Percentage of stocks</strong> beating SPY and IWB by sector</li>
+                    <li><strong>Market cap breakdown</strong> showing which size categories outperform</li>
+                    <li><strong>5-year aggregate view</strong> of individual stock winners vs. losers</li>
+                    <li><strong>Color-coded tables</strong> (green = >50% beat index, red = <50%)</li>
+                    <li><strong>Overall statistics</strong> on total stocks beating benchmarks</li>
+                </ul>
+                <a href="stock_beating_index_report.html" class="report-link">View 5-Year Analysis →</a>
+            </div>
+
+            <!-- Report 3 -->
+            <div class="report-card">
+                <h2>
+                    <span class="icon">📅</span>
+                    Stock-Level Analysis by Year
+                    <span class="badge">INTERACTIVE</span>
+                </h2>
+                <p>
+                    Interactive tabbed report allowing you to analyze stock performance year-by-year. See how market
+                    conditions changed and which sectors consistently outperformed across different market cycles.
+                </p>
+                <ul>
+                    <li><strong>Tabs for each year</strong> (2020, 2021, 2022, 2023, 2024, 2025)</li>
+                    <li><strong>Year-specific statistics</strong> for SPY and IWB returns</li>
+                    <li><strong>Sector and market cap tables</strong> for each individual year</li>
+                    <li><strong>Identify trends</strong> across bull markets (2020-2021) vs. bear markets (2022)</li>
+                    <li><strong>Interactive switching</strong> between years with smooth animations</li>
+                </ul>
+                <a href="stock_beating_index_by_year.html" class="report-link">View Year-by-Year Analysis →</a>
+            </div>
+        </div>
+
+        <div class="info-box" style="background: #d1ecf1; border-left-color: #0c5460;">
+            <h3 style="color: #0c5460;">💡 How to Use These Reports</h3>
+            <p style="color: #0c5460;">
+                <strong>Start with the Sector Performance Report</strong> to understand overall trends by sector and market cap.
+                Then use the <strong>Stock-Level Analysis</strong> to see if sector averages are driven by a few winners or
+                broad-based performance. Finally, check the <strong>Year-by-Year report</strong> to identify which years
+                certain sectors excelled or struggled, revealing market regime changes and rotation patterns.
+            </p>
+        </div>
+
+        <div class="footer">
+            <p><strong>Data Source:</strong> Russell 1000 stocks via Yahoo Finance (yfinance)</p>
+            <p><strong>Analysis Period:</strong> October 2020 - October 2025</p>
+            <p><strong>Methodology:</strong> Average monthly returns using adjusted close prices</p>
+            <p style="margin-top: 20px;">Generated using Python, pandas, and SQLite</p>
+        </div>
+    </div>
+</body>
+</html>

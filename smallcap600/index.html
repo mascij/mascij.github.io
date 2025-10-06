@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&P SmallCap 600 Analysis Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .report-info {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 0.95em;
+        }
+
+        h2 {
+            color: #4a5568;
+            font-size: 1.8em;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 30px 0 20px 0;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: #f7fafc;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            color: #4a5568;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: #e2e8f0;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .table-container {
+            margin-bottom: 50px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            font-size: 0.9em;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 12px 8px;
+            text-align: right;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        th:first-child {
+            text-align: left;
+            min-width: 180px;
+        }
+
+        td {
+            padding: 10px 8px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.9em;
+        }
+
+        td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        tr:hover {
+            background-color: #f7fafc;
+        }
+
+        .positive {
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .negative {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+
+        .index-row {
+            background-color: #edf2f7;
+            font-style: italic;
+        }
+
+        .index-row td {
+            border-bottom: 2px solid #cbd5e0;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .summary-box h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .summary-box p {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .navigation {
+            text-align: center;
+            margin: 40px 0 20px 0;
+        }
+
+        .nav-link {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            var contents = document.getElementsByClassName('tab-content');
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+
+            // Remove active from all tabs
+            var tabs = document.getElementsByClassName('tab');
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        
+        <h1>S&P SmallCap 600 Analysis Dashboard</h1>
+        <div class="report-info">
+            Generated on October 06, 2025<br>
+            Data Period: October 2020 - October 2025 (5 Years)<br>
+            359 Stocks + 4 Benchmark ETFs
+        </div>
+
+        <div class="summary-box">
+            <h3>📊 About This Analysis</h3>
+            <p>
+                This dashboard provides comprehensive performance analysis of S&P SmallCap 600 stocks,
+                comparing sector and market cap bucket performance against benchmark indexes including
+                IJR (S&P 600 ETF), SPY (S&P 500), IWB (Russell 1000), and IWM (Russell 2000).
+            </p>
+        </div>
+
+        <h2>Available Reports</h2>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 30px 0;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 12px; color: white;">
+                <h3 style="color: white; margin-bottom: 15px;">📈 Sector Performance</h3>
+                <p style="margin-bottom: 20px;">Analyze performance by industry sector with year-by-year breakdowns.</p>
+                <a href="sector_performance_report.html" class="nav-link" style="background: white; color: #667eea;">View Report</a>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 30px; border-radius: 12px; color: white;">
+                <h3 style="color: white; margin-bottom: 15px;">💰 Market Cap Buckets</h3>
+                <p style="margin-bottom: 20px;">Compare performance across different market capitalization ranges.</p>
+                <a href="market_cap_buckets_report.html" class="nav-link" style="background: white; color: #f5576c;">View Report</a>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 30px; border-radius: 12px; color: white;">
+                <h3 style="color: white; margin-bottom: 15px;">🏆 Top Performers</h3>
+                <p style="margin-bottom: 20px;">Discover steady growers and breakout stars by sector with event-driven insights.</p>
+                <a href="top_performers_by_sector.html" class="nav-link" style="background: white; color: #4facfe;">View Report</a>
+            </div>
+        </div>
+
+        <div class="summary-box">
+            <h3>📁 Data Sources</h3>
+            <p>
+                <strong>Price Data:</strong> Daily OHLCV data from yfinance (Oct 2020 - Oct 2025)<br>
+                <strong>Fundamentals:</strong> Market capitalization, earnings data, analyst actions<br>
+                <strong>Benchmarks:</strong> IJR, SPY, IWB, IWM ETFs<br>
+                <strong>Database:</strong> SQLite with 428,470 daily price records
+            </p>
+        </div>
+        
+    </div>
+</body>
+</html>

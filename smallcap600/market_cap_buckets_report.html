@@ -1,0 +1,659 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S&P SmallCap 600 - Market Cap Bucket Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #2d3748;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .report-info {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 0.95em;
+        }
+
+        h2 {
+            color: #4a5568;
+            font-size: 1.5em;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e2e8f0;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 15px 30px;
+            background: #f7fafc;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #4a5568;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            background: #edf2f7;
+            color: #2d3748;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0 40px 0;
+        }
+
+        .stat-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: #718096;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-container {
+            margin-bottom: 50px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 15px 12px;
+            text-align: right;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        th:first-child {
+            text-align: left;
+        }
+
+        td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95em;
+        }
+
+        td:first-child {
+            text-align: left;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        tr:hover {
+            background-color: #f7fafc;
+        }
+
+        .outperform {
+            color: #2f855a;
+            font-weight: 700;
+            background-color: #c6f6d5;
+        }
+
+        .underperform {
+            color: #c53030;
+            font-weight: 700;
+            background-color: #fed7d7;
+        }
+
+        .summary-box {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+
+        .summary-box h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .summary-box p {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .navigation {
+            text-align: center;
+            margin: 40px 0 20px 0;
+        }
+
+        .nav-link {
+            display: inline-block;
+            margin: 0 10px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+    <script>
+        function openYear(evt, year) {
+            // Hide all tab content
+            var tabContents = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+
+            // Remove active class from all buttons
+            var tabButtons = document.getElementsByClassName("tab-button");
+            for (var i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+
+            // Show current tab and mark button as active
+            document.getElementById(year).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        
+        <h1>💰 S&P SmallCap 600 - Market Cap Bucket Analysis</h1>
+        <div class="report-info">
+            <p>S&P SmallCap 600 Stocks | Year-by-Year Analysis (2020-2025)</p>
+            <p>Generated: October 06, 2025 at 02:06 PM</p>
+        </div>
+
+        <div class="navigation">
+            <a href="index.html" class="nav-link">📊 Home</a>
+            <a href="sector_performance_report.html" class="nav-link">📈 Sector Analysis</a>
+        </div>
+
+        <div class="summary-box">
+            <h3>📈 Analysis Overview</h3>
+            <p>
+                This report analyzes performance by market cap bucket compared to SPY (S&P 500) and IJR (S&P 600) indexes.
+                Use the tabs to switch between years. Green cells indicate more than 50% of stocks in that bucket beat
+                the index, while red indicates fewer than 50%.
+            </p>
+            <p style="margin-top: 15px;">
+                <strong>Market Cap Buckets:</strong><br>
+                Upper Small Cap: $3B-$5B | Mid Small Cap: $1.5B-$3B | Lower Small Cap: $750M-$1.5B<br>
+                Micro Cap: $300M-$750M | Nano Cap: &lt;$300M | Mid Cap+: &gt;$5B
+            </p>
+        </div>
+
+        <div class="tab-bar">
+        <button class="tab-button active" onclick="openYear(event, '2020')">2020</button>
+<button class="tab-button " onclick="openYear(event, '2021')">2021</button>
+<button class="tab-button " onclick="openYear(event, '2022')">2022</button>
+<button class="tab-button " onclick="openYear(event, '2023')">2023</button>
+<button class="tab-button " onclick="openYear(event, '2024')">2024</button>
+<button class="tab-button " onclick="openYear(event, '2025')">2025</button>
+</div>
+<div id="2020" class="tab-content active">
+<div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Stocks</div>
+                    <div class="stat-value">322</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">SPY Return</div>
+                    <div class="stat-value">2.69%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">IJR Return</div>
+                    <div class="stat-value">6.48%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Beating Both</div>
+                    <div class="stat-value">52.5%</div>
+                </div>
+            </div>
+<div class="table-container">
+<h2>Percentage of Stocks Beating Indexes by Market Cap Bucket (2020)</h2>
+<table>
+<thead><tr><th>Market Cap Bucket</th><th># Stocks</th><th>% Beating SPY</th><th>% Beating IJR</th><th>% Beating Both</th></tr></thead>
+<tbody>
+<tr>
+<td>Mid Cap+ (>$5B)</td>
+<td>54</td>
+<td class="outperform">72.2%</td>
+<td class="underperform">46.3%</td>
+<td class="underperform">46.3%</td>
+</tr>
+<tr>
+<td>Upper Small Cap</td>
+<td>91</td>
+<td class="outperform">78.0%</td>
+<td class="outperform">54.9%</td>
+<td class="outperform">54.9%</td>
+</tr>
+<tr>
+<td>Mid Small Cap</td>
+<td>112</td>
+<td class="outperform">75.9%</td>
+<td class="outperform">52.7%</td>
+<td class="outperform">52.7%</td>
+</tr>
+<tr>
+<td>Lower Small Cap</td>
+<td>55</td>
+<td class="outperform">65.5%</td>
+<td class="underperform">49.1%</td>
+<td class="underperform">49.1%</td>
+</tr>
+<tr>
+<td>Micro Cap</td>
+<td>10</td>
+<td class="outperform">100.0%</td>
+<td class="outperform">80.0%</td>
+<td class="outperform">80.0%</td>
+</tr>
+</tbody></table>
+</div></div>
+<div id="2021" class="tab-content ">
+<div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Stocks</div>
+                    <div class="stat-value">335</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">SPY Return</div>
+                    <div class="stat-value">1.78%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">IJR Return</div>
+                    <div class="stat-value">1.09%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Beating Both</div>
+                    <div class="stat-value">40.9%</div>
+                </div>
+            </div>
+<div class="table-container">
+<h2>Percentage of Stocks Beating Indexes by Market Cap Bucket (2021)</h2>
+<table>
+<thead><tr><th>Market Cap Bucket</th><th># Stocks</th><th>% Beating SPY</th><th>% Beating IJR</th><th>% Beating Both</th></tr></thead>
+<tbody>
+<tr>
+<td>Mid Cap+ (>$5B)</td>
+<td>55</td>
+<td class="underperform">38.2%</td>
+<td class="outperform">54.5%</td>
+<td class="underperform">38.2%</td>
+</tr>
+<tr>
+<td>Upper Small Cap</td>
+<td>95</td>
+<td class="underperform">42.1%</td>
+<td class="outperform">54.7%</td>
+<td class="underperform">42.1%</td>
+</tr>
+<tr>
+<td>Mid Small Cap</td>
+<td>119</td>
+<td class="underperform">35.3%</td>
+<td class="underperform">49.6%</td>
+<td class="underperform">35.3%</td>
+</tr>
+<tr>
+<td>Lower Small Cap</td>
+<td>56</td>
+<td class="underperform">50.0%</td>
+<td class="outperform">55.4%</td>
+<td class="underperform">50.0%</td>
+</tr>
+<tr>
+<td>Micro Cap</td>
+<td>10</td>
+<td class="outperform">60.0%</td>
+<td class="outperform">60.0%</td>
+<td class="outperform">60.0%</td>
+</tr>
+</tbody></table>
+</div></div>
+<div id="2022" class="tab-content ">
+<div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Stocks</div>
+                    <div class="stat-value">336</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">SPY Return</div>
+                    <div class="stat-value">-1.71%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">IJR Return</div>
+                    <div class="stat-value">-1.59%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Beating Both</div>
+                    <div class="stat-value">58.0%</div>
+                </div>
+            </div>
+<div class="table-container">
+<h2>Percentage of Stocks Beating Indexes by Market Cap Bucket (2022)</h2>
+<table>
+<thead><tr><th>Market Cap Bucket</th><th># Stocks</th><th>% Beating SPY</th><th>% Beating IJR</th><th>% Beating Both</th></tr></thead>
+<tbody>
+<tr>
+<td>Mid Cap+ (>$5B)</td>
+<td>55</td>
+<td class="outperform">58.2%</td>
+<td class="outperform">58.2%</td>
+<td class="outperform">58.2%</td>
+</tr>
+<tr>
+<td>Upper Small Cap</td>
+<td>95</td>
+<td class="outperform">55.8%</td>
+<td class="outperform">53.7%</td>
+<td class="outperform">53.7%</td>
+</tr>
+<tr>
+<td>Mid Small Cap</td>
+<td>120</td>
+<td class="outperform">63.3%</td>
+<td class="outperform">62.5%</td>
+<td class="outperform">62.5%</td>
+</tr>
+<tr>
+<td>Lower Small Cap</td>
+<td>56</td>
+<td class="outperform">55.4%</td>
+<td class="outperform">55.4%</td>
+<td class="outperform">55.4%</td>
+</tr>
+<tr>
+<td>Micro Cap</td>
+<td>10</td>
+<td class="outperform">60.0%</td>
+<td class="outperform">60.0%</td>
+<td class="outperform">60.0%</td>
+</tr>
+</tbody></table>
+</div></div>
+<div id="2023" class="tab-content ">
+<div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Stocks</div>
+                    <div class="stat-value">340</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">SPY Return</div>
+                    <div class="stat-value">1.77%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">IJR Return</div>
+                    <div class="stat-value">0.96%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Beating Both</div>
+                    <div class="stat-value">44.4%</div>
+                </div>
+            </div>
+<div class="table-container">
+<h2>Percentage of Stocks Beating Indexes by Market Cap Bucket (2023)</h2>
+<table>
+<thead><tr><th>Market Cap Bucket</th><th># Stocks</th><th>% Beating SPY</th><th>% Beating IJR</th><th>% Beating Both</th></tr></thead>
+<tbody>
+<tr>
+<td>Mid Cap+ (>$5B)</td>
+<td>55</td>
+<td class="outperform">58.2%</td>
+<td class="outperform">72.7%</td>
+<td class="outperform">58.2%</td>
+</tr>
+<tr>
+<td>Upper Small Cap</td>
+<td>95</td>
+<td class="outperform">56.8%</td>
+<td class="outperform">66.3%</td>
+<td class="outperform">56.8%</td>
+</tr>
+<tr>
+<td>Mid Small Cap</td>
+<td>124</td>
+<td class="underperform">35.5%</td>
+<td class="outperform">54.8%</td>
+<td class="underperform">35.5%</td>
+</tr>
+<tr>
+<td>Lower Small Cap</td>
+<td>56</td>
+<td class="underperform">33.9%</td>
+<td class="underperform">46.4%</td>
+<td class="underperform">33.9%</td>
+</tr>
+<tr>
+<td>Micro Cap</td>
+<td>10</td>
+<td class="underperform">20.0%</td>
+<td class="underperform">40.0%</td>
+<td class="underperform">20.0%</td>
+</tr>
+</tbody></table>
+</div></div>
+<div id="2024" class="tab-content ">
+<div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Stocks</div>
+                    <div class="stat-value">344</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">SPY Return</div>
+                    <div class="stat-value">2.11%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">IJR Return</div>
+                    <div class="stat-value">1.45%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Beating Both</div>
+                    <div class="stat-value">58.4%</div>
+                </div>
+            </div>
+<div class="table-container">
+<h2>Percentage of Stocks Beating Indexes by Market Cap Bucket (2024)</h2>
+<table>
+<thead><tr><th>Market Cap Bucket</th><th># Stocks</th><th>% Beating SPY</th><th>% Beating IJR</th><th>% Beating Both</th></tr></thead>
+<tbody>
+<tr>
+<td>Mid Cap+ (>$5B)</td>
+<td>56</td>
+<td class="outperform">80.4%</td>
+<td class="outperform">87.5%</td>
+<td class="outperform">80.4%</td>
+</tr>
+<tr>
+<td>Upper Small Cap</td>
+<td>96</td>
+<td class="outperform">68.8%</td>
+<td class="outperform">80.2%</td>
+<td class="outperform">68.8%</td>
+</tr>
+<tr>
+<td>Mid Small Cap</td>
+<td>126</td>
+<td class="outperform">54.0%</td>
+<td class="outperform">61.9%</td>
+<td class="outperform">54.0%</td>
+</tr>
+<tr>
+<td>Lower Small Cap</td>
+<td>56</td>
+<td class="underperform">33.9%</td>
+<td class="outperform">51.8%</td>
+<td class="underperform">33.9%</td>
+</tr>
+<tr>
+<td>Micro Cap</td>
+<td>10</td>
+<td class="underperform">30.0%</td>
+<td class="underperform">40.0%</td>
+<td class="underperform">30.0%</td>
+</tr>
+</tbody></table>
+</div></div>
+<div id="2025" class="tab-content ">
+<div class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Stocks</div>
+                    <div class="stat-value">344</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">SPY Return</div>
+                    <div class="stat-value">1.79%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">IJR Return</div>
+                    <div class="stat-value">1.01%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Beating Both</div>
+                    <div class="stat-value">34.3%</div>
+                </div>
+            </div>
+<div class="table-container">
+<h2>Percentage of Stocks Beating Indexes by Market Cap Bucket (2025)</h2>
+<table>
+<thead><tr><th>Market Cap Bucket</th><th># Stocks</th><th>% Beating SPY</th><th>% Beating IJR</th><th>% Beating Both</th></tr></thead>
+<tbody>
+<tr>
+<td>Mid Cap+ (>$5B)</td>
+<td>56</td>
+<td class="outperform">69.6%</td>
+<td class="outperform">78.6%</td>
+<td class="outperform">69.6%</td>
+</tr>
+<tr>
+<td>Upper Small Cap</td>
+<td>96</td>
+<td class="underperform">33.3%</td>
+<td class="underperform">44.8%</td>
+<td class="underperform">33.3%</td>
+</tr>
+<tr>
+<td>Mid Small Cap</td>
+<td>126</td>
+<td class="underperform">31.0%</td>
+<td class="underperform">38.9%</td>
+<td class="underperform">31.0%</td>
+</tr>
+<tr>
+<td>Lower Small Cap</td>
+<td>56</td>
+<td class="underperform">14.3%</td>
+<td class="underperform">21.4%</td>
+<td class="underperform">14.3%</td>
+</tr>
+<tr>
+<td>Micro Cap</td>
+<td>10</td>
+<td class="underperform">0.0%</td>
+<td class="underperform">10.0%</td>
+<td class="underperform">0.0%</td>
+</tr>
+</tbody></table>
+</div></div>
+
+    </div>
+</body>
+</html>
