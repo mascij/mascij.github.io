@@ -18,6 +18,7 @@
         }
         h1 { color: #2d3748; font-size: 2.8em; margin-bottom: 15px; text-align: center; }
         .subtitle { color: #718096; text-align: center; margin-bottom: 50px; font-size: 1.2em; }
+        h3 { margin-top: 15px; }
 
         .chart-section {
             margin: 50px 0; padding: 35px;
@@ -128,6 +129,57 @@
     <div class="container">
         <h1>🔬 Deep Dive Analysis: What Drives Performance</h1>
         <div class="subtitle">Comprehensive analysis of 72 rebalancing periods across 6 strategies</div>
+
+
+        <div class="insight-section" style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border-left-color: #0369a1;">
+            <h2 style="color: #0369a1;">📋 Strategy Descriptions</h2>
+            <p style="margin-bottom: 25px;">Understanding what each strategy tests and when it performs best:</p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                <div class="highlight-box" style="background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%); border-color: #28a745;">
+                    <h3 style="color: #28a745; margin-bottom: 10px;">⭐ Medium-Balanced (RECOMMENDED)</h3>
+                    <p style="margin-bottom: 8px;"><strong>Lookback:</strong> 12 months | <strong>Portfolio:</strong> 20 stocks</p>
+                    <p style="margin-bottom: 8px;"><strong>Criteria:</strong> Steady Score ≥65, Consistency ≥70%</p>
+                    <p>Balanced approach with 1-year lookback and moderate criteria. Most consistent performer with 92.3% win rate vs IJR. Best for live trading.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">Short-High</h3>
+                    <p style="margin-bottom: 8px;"><strong>Lookback:</strong> 6 months | <strong>Portfolio:</strong> 20 stocks</p>
+                    <p style="margin-bottom: 8px;"><strong>Criteria:</strong> Steady Score ≥70, Consistency ≥75%</p>
+                    <p>Aggressive short-term strategy capturing recent momentum. Best for bull markets but vulnerable in volatility.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">Long-Broader</h3>
+                    <p style="margin-bottom: 8px;"><strong>Lookback:</strong> 18 months | <strong>Portfolio:</strong> 20 stocks</p>
+                    <p style="margin-bottom: 8px;"><strong>Criteria:</strong> Steady Score ≥60, Consistency ≥65%</p>
+                    <p>Conservative long-term strategy. Best bear market performance (+6.10% alpha). Filters out momentum chasers.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">Short-Diversified</h3>
+                    <p style="margin-bottom: 8px;"><strong>Lookback:</strong> 6 months | <strong>Portfolio:</strong> 30 stocks</p>
+                    <p style="margin-bottom: 8px;"><strong>Criteria:</strong> Steady Score ≥60</p>
+                    <p>Diversified approach spreading risk across 30 positions. Good for risk-averse investors wanting small-cap exposure.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">Ultra-Selective</h3>
+                    <p style="margin-bottom: 8px;"><strong>Lookback:</strong> 12 months | <strong>Portfolio:</strong> 10 stocks</p>
+                    <p style="margin-bottom: 8px;"><strong>Criteria:</strong> Steady Score ≥75, Consistency ≥80%, Avg Monthly Return ≥2%</p>
+                    <p>Extremely strict quality filter. Highest returns (25.12%) and alpha (+20.11%) but fewer opportunities. High risk, high reward.</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3 style="color: #667eea; margin-bottom: 10px;">Low-Volatility</h3>
+                    <p style="margin-bottom: 8px;"><strong>Lookback:</strong> 12 months | <strong>Portfolio:</strong> 20 stocks</p>
+                    <p style="margin-bottom: 8px;"><strong>Criteria:</strong> Steady Score ≥65, Max Volatility ≤15%</p>
+                    <p>Explicitly caps monthly volatility at 15% for stable, predictable returns. Conservative approach.</p>
+                </div>
+            </div>
+        </div>
+    
 
         <!-- PERFORMANCE CHARTS -->
         <div class="chart-section">
